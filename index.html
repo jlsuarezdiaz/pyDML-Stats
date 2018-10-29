@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>pyDML Stats (0.0.1) - Home</title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Page level plugin CSS-->
+    <link href="vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+
+    
+
+    <script src="js/load.js"></script>
+    <script src="js/table_format.js"></script>
+    <script src="js/page_state.js"></script>
+
+    <script>
+
+    	var page_state;
+    	var main_title = "pyDML Stats";
+    	var version = "0.0.1";
+
+      	$(document).ready(function(){
+      		page_state = new PageState();
+      		page_state.setPageContainer($("#page-content"));
+      		page_state.setButtonsContainer($("#buttons-panel"));
+      		page_state.setTextContainer($("#head-text"));
+
+      		page_state.addMetadata("sonar-nclasses",2);
+      		page_state.addMetadata("sonar-maxdim",60);
+      		page_state.addMetadata("movement_libras-nclasses",15);
+      		page_state.addMetadata("movement_libras-maxdim",90);
+      		page_state.addMetadata("spambase-nclasses",2);
+      		page_state.addMetadata("spambase-maxdim",57);
+
+      		reload_page(page_state);
+
+      		menu_bts = ["#home","#datasets","#basic","#ncm","#ker","#dim"];
+
+      		for(var i = 0; i < menu_bts.length; i++){
+      			$(menu_bts[i]).click(function(){
+      				reload_page_from_menu(this,page_state);
+      				var sidemenu = document.getElementsByClassName("side-menu");
+      				for(var j = 0; j < sidemenu.length; j++){
+      					sidemenu[j].className = sidemenu[j].className.replace(" active","");
+      				}
+      				this.parentNode.className += " active";
+      				document.title = main_title + " (" + version + ") - " + this.getAttribute("data-shortname");
+      			});
+      		}
+
+      		$('[data-toggle2="popover"]').popover(); 
+			
+
+
+
+
+      		/*$("#home").click(function(){
+      			reload_page_from_menu(this,page_state);
+      		})
+
+      		$("#basic").click(function(){
+      			reload_page_from_menu(this,page_state);
+      		});*/
+
+
+	       	//$("#page-content").load("home.html",function(){
+
+	        //	var tables = document.getElementsByClassName("maxhighlightable");
+	        //	highlight_max(tables);
+	        	
+	        	//var table = tables.item(0);
+	        	//var cell = table.rows[1].cells[1];
+	        	//cell.onclick = function(){
+	        	//	$("#page-content").load("results/appendicitis-3nn-test.csv");
+	        	//}
+	        	//cell.onmouseover = function(){
+	        	//	cell.style.cursor = "pointer"
+	        	//}
+	        	//var cell2 = table.rows[0].cells[1];
+	        	//cell2.onmouseover = function(){
+	        	//	cell2.title = "LDA()"
+	        	//}
+
+	        	//load_buttons([{'3nn':'3-NN','5nn':'5-NN','7nn':'7-NN'},{'train':'Train','test':'Test'}],'#buttons-pannel');
+
+
+
+
+        	//});
+      	});
+    </script>
+
+  </head>
+
+  <body id="page-top">
+
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+
+      <a class="navbar-brand mr-1" href="index.html">pyDML Stats</a>
+
+      <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <!-- Navbar Search -->
+      <!--
+      <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="button">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+      -->
+
+      <!-- Navbar -->
+      <ul class="navbar-nav ml-auto mr-0 mr-md-3 my-2 my-md-0">
+        <li class="nav-item no-arrow mx-1"><!-- dropdown -->
+          <a class="nav-link" href="https://github.com/jlsuarezdiaz/pyDML" id="srcButton" role="button" aria-haspopup="true" aria-expanded="false"><!-- dropdown toggle-->
+            <!--<span class="badge badge-danger">NEW!</span>-->
+            <i class="fab fa-github fa-fw"></i>
+            Source code
+          </a>
+        </li>
+
+        <li class="nav-item no-arrow mx-1"><!-- dropdown -->
+          <a class="nav-link" href="https://pydml.readthedocs.io/" id="docsButton" role="button" aria-haspopup="true" aria-expanded="false"><!-- dropdown toggle-->
+            <i class="fas fa-book fa-fw"></i>
+            Documentation
+          </a>
+        </li>
+
+        <li class="nav-item no-arrow mx-1"><!-- dropdown -->
+          <a class="nav-link" href="https://pypi.org/project/pyDML/" id="pypiButton" role="button" aria-haspopup="true" aria-expanded="false"><!-- dropdown toggle-->
+            <span class="badge badge-info">v0.0.1</span>
+            <i class="fab fa-python fa-fw"></i>
+            Download software from PyPI
+          </a>
+        </li>
+
+        <li class="nav-item dropdown no-arrow mx-1"><!-- dropdown -->
+          <a class="nav-link dropdown-toggle" href="#" id="downloadDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><!-- dropdown toggle-->
+            <i class="fas fa-download fa-fw"></i>
+            Downloads
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="downloadDropdown">
+            <a class="dropdown-item" href="#">Download scripts</a>
+            <a class="dropdown-item" href="#">Download tables</a>
+            <!--<div class="dropdown-divider"></div>-->
+            <a class="dropdown-item" href="#">Download all</a>
+          </div>
+        </li>
+
+        <li class="nav-item no-arrow mx-1"><!-- dropdown -->
+          <a class="nav-link" href="https://sci2s.ugr.es/keel/category.php?cat=clas" id="keelButton" role="button" aria-haspopup="true" aria-expanded="false"><!-- dropdown toggle-->
+            <i class="fas fa-database fa-fw"></i>
+            Link to repositories
+          </a>
+        </li>
+
+      </ul>
+
+    </nav>
+
+    <div id="wrapper">
+
+      <!-- Sidebar -->
+      <ul class="sidebar navbar-nav">
+      	<li class="nav-item side-menu active">
+          <a class="nav-link" id="home" href="#" data-shortname="Home">
+            <i class="fas fa-fw fa-home"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li class="nav-item side-menu">
+          <a class="nav-link" id="datasets" href="#" data-shortname="Datasets">
+            <i class="fas fa-fw fa-info-circle"></i>
+            <span>Datasets information</span>
+          </a>
+        </li>
+        <li class="nav-item side-menu">
+          <a class="nav-link" id="basic" href="#" data-shortname="Basic Experiments">
+            <i class="fas fa-fw fa-flask"></i>
+            <span>Nearest neighbors basic experiments</span>
+          </a>
+        </li>
+        <li class="nav-item side-menu">
+          <a class="nav-link" id="ncm" href="#" data-shortname="Nearest Centroid Experiments">
+            <i class="fas fa-fw fa-spinner"></i>
+            <span>Nearest centroids experiments</span>
+          </a>
+        </li>
+        <li class="nav-item side-menu">
+          <a class="nav-link" id="ker" href="#" data-shortname="Kernel Experiments">
+            <i class="fas fa-fw fa-magic"></i>
+            <span>Kernel experiments</span>
+          </a>
+        </li>
+        <li class="nav-item side-menu">
+          <a class="nav-link" id="dim" href="#" data-shortname="Dimensionality Reduction Experiments">
+            <i class="fas fa-fw fa-search-minus"></i>
+            <span>Dimensionality reduction experiments</span>
+          </a>
+        </li>
+        <li class="nav-item dropdown side-menu">
+          <a class="nav-link dropdown-toggle disabled" href="#" id="old" role="button" data-toggle="dropdown" data-toggle2="popover" data-trigger="hover" data-content="The are no older versions yet!" aria-haspopup="true" aria-expanded="false"
+            <i class="far fa-fw fa-clock"></i>
+            <span class="badge badge-danger">Not yet!</span><span>Older versions</span>
+          </a>
+          <!--<div class="dropdown-menu dropdown-menu-right" aria-labelledby="downloadDropdown">
+            
+          </div>-->
+        </li>
+
+        
+      </ul>
+
+      <div id="content-wrapper">
+
+
+        <div class="container-fluid">
+
+          	<!-- Breadcrumbs-->
+          	<!--
+          	<ol class="breadcrumb">
+          	  <li class="breadcrumb-item">
+          	    <a href="index.html">Dashboard</a>
+          	  </li>
+          	  <li class="breadcrumb-item active">Blank Page</li>
+          	</ol>
+          	-->
+	
+	          	<!-- Page Content -->
+	        <section id="head-text">
+		        
+	      	</section>
+	        
+            <!--
+            <div class="row">
+                <div class="col-sm-2"-->
+        	        <section id="buttons-panel">
+        	        	
+        	        </section>
+            <!--    </div>
+    	
+                <div class="col-sm-8">-->
+        	        <section id="page-content">
+        	          	  
+                  	</section>
+            <!--    </div>
+            </div>-->
+
+        </div>
+        <!-- /.container-fluid -->
+
+        <!-- Sticky Footer -->
+        <footer class="sticky-footer">
+          <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+              <span>Copyright © Juan Luis Suárez 2018</span>
+            </div>
+          </div>
+        </footer>
+
+      </div>
+      <!-- /.content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin.min.js"></script>
+
+    
+
+  </body>
+
+</html>
