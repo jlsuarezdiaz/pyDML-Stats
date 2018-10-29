@@ -117,6 +117,7 @@ function reload_page(page_state){
     var topic = page_state.getPageContentItem(0);
     if(topic == "home"){
         page_state.getTextContainer().load("view/home.html");
+        page_state.getPageContainer().empty();
     }
     else{
         load_results(page_state);
