@@ -1,0 +1,606 @@
+from dml import (kNN, PCA, LDA, ANMM, LMNN, NCA, NCMML, NCMC, ITML, DMLMJ, MCML,
+                 LSI, DML_eig, LDML, KLMNN, KANMM, KDMLMJ, KDA, Euclidean, NCMC_Classifier)
+
+from collections import defaultdict
+from utils import datasets as ds
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.decomposition import KernelPCA
+from sklearn.neighbors import NearestCentroid
+
+import numpy as np
+import pandas as pd
+
+import time
+import traceback
+
+
+def test_datasets():
+    return [('iris', 1),
+            ('balance', 1),
+            ('sonar', 1)
+            ]
+
+
+def small_datasets():
+    return [('appendicitis', 1),
+            ('balance', 1),
+            ('bupa', 1),
+            ('cleveland', 1),
+            ('glass', 1),
+            ('hepatitis', 1),
+            ('ionosphere', 1),
+            ('iris', 1),
+            ('monk-2', 1),
+            ('newthyroid', 1),
+            ('sonar', 1),
+            ('wine', 1)
+            ]
+
+
+def medium_datasets():
+    return [('movement_libras', 1),
+            ('pima', 1),
+            ('vehicle', 1),
+            ('vowel', 1),
+            ('wdbc', 1),
+            ('wisconsin', 1)
+            ]
+
+
+def large_datasets1():
+    return [('segment', 5),
+            ('satimage', 5),
+            ('winequality_red', 1),
+            ('digits', 1)
+            ]
+
+
+def large_datasets2():
+    return [('spambase', 1),
+            ('optdigits', 5),
+            ('twonorm', 5),
+            ('titanic', 1)
+            ]
+
+
+def large_datasets3():
+    return [('banana', 5),
+            ('texture', 5),
+            ('ring', 5),
+            ('letter', 10)]
+
+
+def large_datasets4():
+    return [('phoneme', 5),
+            ('page-blocks', 5),
+            ('thyroid', 5),
+            ('magic', 10)
+            ]
+
+
+def test_dataset_names():
+    return ['iris',
+            'balance',
+            'sonar'
+            ]
+
+
+def dataset_names():
+    return ['appendicitis',
+            'balance',
+            'banana',
+            'bupa',
+            'cleveland',
+            'glass',
+            'hepatitis',
+            'ionosphere',
+            'iris',
+            'letter',
+            'magic',
+            'monk-2',
+            'movement_libras',
+            'newthyroid',
+            'optdigits',
+            'page-blocks',
+            'phoneme',
+            'ring',
+            'segment',
+            'sonar',
+            'spambase',
+            'texture',
+            'thyroid',
+            'titanic',
+            'twonorm',
+            'vehicle',
+            'vowel',
+            'wdbc',
+            'wine',
+            'winequality-red',
+            'wisconsin']
+
+
+def medium_datasets_ker():
+    return [('movement_libras', 1),
+            ('pima', 1),
+            ('wdbc', 1),
+            ]
+
+
+def large_datasets_ker1():
+    return [('segment', 5),
+            ('satimage', 5),
+            ]
+
+
+def large_datasets_ker2():
+    return [('spambase', 1),
+            ('optdigits', 5),
+            ('twonorm', 5),
+            ]
+
+
+def large_datasets_ker3():
+    return [('banana', 5),
+            ]
+
+
+def large_datasets_ker4():
+    return [('phoneme', 5),
+            ]
+
+
+def ker_datasets_names():
+    return ['appendicitis',
+            'balance',
+            'banana',
+            'bupa',
+            'cleveland',
+            'glass',
+            'hepatitis',
+            'ionosphere',
+            'iris',
+            'monk-2',
+            'movement_libras',
+            'newthyroid',
+            'optdigits',
+            'phoneme',
+            'pima'
+            'satimage',
+            'segment',
+            'sonar',
+            'spambase',
+            'twonorm',
+            'wdbc',
+            'wine',
+            ]
+
+
+def dim_datasets():
+    return [('sonar', 1),
+            ('movement_libras', 1),
+            ('spambase', 1),
+            ]
+
+
+def dim_datasets_names():
+    return ['sonar', 'movement_libras', 'spambase']
+
+
+def test_dim_datasets():
+    return [('sonar', 1)]
+
+
+def test_dim_datasets_names():
+    return ['sonar']
+
+
+def dim_dimensionalities():
+    return [1, 2, 3, 5, 10, 20, 30, 40, 50]
+
+
+def table_css():
+    return "table table-striped table-hover table-bordered table-condensed table-responsive"
+
+
+def test_knn_algs():
+    euclidean = Euclidean()
+    lda = LDA()
+    dmlmj_3 = DMLMJ(n_neighbors=3)
+    dmlmj_5 = DMLMJ(n_neighbors=5)
+    dmlmj_7 = DMLMJ(n_neighbors=7)
+
+    return [(euclidean, 'Euclidean', 'euclidean', [3, 5, 7], 'Euclidean()'),
+            (lda, 'LDA', 'lda', [3, 5, 7], 'LDA()'),
+            (dmlmj_3, 'DMLMJ', 'dmlmj', [3], 'DMLMJ(n_neighbors=3)'),
+            (dmlmj_5, 'DMLMJ', 'dmlmj', [5], 'DMLMJ(n_neighbors=5)'),
+            (dmlmj_7, 'DMLMJ', 'dmlmj', [7], 'DMLMJ(n_neighbors=7)')
+            ]
+
+
+def basic_knn_algs():
+    euclidean = Euclidean()
+    lda = LDA()
+    nca = NCA()
+    lmnn_3 = LMNN(k=3)
+    lmnn_5 = LMNN(k=5)
+    lmnn_7 = LMNN(k=7)
+    lmnn_sgd_3 = LMNN(k=3, solver='SGD', eta0=0.01)
+    lmnn_sgd_5 = LMNN(k=5, solver='SGD', eta0=0.01)
+    lmnn_sgd_7 = LMNN(k=7, solver='SGD', eta0=0.01)
+    itml = ITML()
+    dmlmj_3 = DMLMJ(n_neighbors=3)
+    dmlmj_5 = DMLMJ(n_neighbors=5)
+    dmlmj_7 = DMLMJ(n_neighbors=7)
+    mcml = MCML()
+    lsi = LSI(supervised=True)
+    dml_eig = DML_eig()
+    ldml = LDML()
+
+    return [(euclidean, 'Euclidean', 'euclidean' [3, 5, 7], 'Euclidean()'),
+            (lda, 'LDA', 'lda', [3, 5, 7], 'LDA()'),
+            (nca, 'NCA', 'nca', [3, 5, 7], 'NCA()'),
+            (lmnn_3, 'LMNN (SDP)', 'lmnn-sdp', [3], 'LMNN(k=3)'),
+            (lmnn_5, 'LMNN (SDP)', 'lmnn-sdp', [5], 'LMNN(k=5)'),
+            (lmnn_7, 'LMNN (SDP)', 'lmnn-sdp', [7], 'LMNN(k=7)'),
+            (lmnn_sgd_3, 'LMNN (SGD)', 'lmnn-sgd', [3], "LMNN(k=3, solver='SGD', eta0=0.01)"),
+            (lmnn_sgd_5, 'LMNN (SGD)', 'lmnn-sgd', [5], "LMNN(k=5, solver='SGD', eta0=0.01)"),
+            (lmnn_sgd_7, 'LMNN (SGD)', 'lmnn-sgd', [7], "LMNN(k=7, solver='SGD', eta0=0.01)"),
+            (itml, 'ITML', 'itml', [3, 5, 7], "ITML()"),
+            (dmlmj_3, 'DMLMJ', 'dmlmj', [3], "DMLMJ(n_neighbors=3)"),
+            (dmlmj_5, 'DMLMJ', 'dmlmj', [5], "DMLMJ(n_neighbors=5)"),
+            (dmlmj_7, 'DMLMJ', 'dmlmj', [7], "DMLMJ(n_neighbors=7)"),
+            (mcml, 'MCML', 'mcml', [3, 5, 7], "MCML()"),
+            (lsi, 'LSI', 'lsi', [3, 5, 7], "LSI(supervised=True)"),
+            (dml_eig, 'DML-eig', 'dml-eig', [3, 5, 7], "DML_eig()"),
+            (ldml, 'LDML', 'ldml', [3, 5, 7], "LDML()")
+            ]
+
+
+def test_kernel_knn_algs():
+    euclidean = Euclidean()
+
+    kpca_linear = KernelPCA(kernel="linear")
+    kpca_poly2 = KernelPCA(kernel="polynomial", degree=2)
+    kpca_poly3 = KernelPCA(kernel="polynomial", degree=3)
+
+    kda_linear = KDA(kernel="linear")
+    kda_poly2 = KDA(kernel="polynomial", degree=2)
+    kda_poly3 = KDA(kernel="polynomial", degree=3)
+
+    return [(euclidean, 'Euclidean', 'euclidean', [3], 'Euclidean()'),
+
+            (kpca_linear, 'KPCA [Linear]', 'kpca-linear', [3], 'sklearn.decomposition.KernelPCA(kernel="linear")'),
+            (kpca_poly2, 'KPCA [Poly-2]', 'kpca-poly-2', [3], 'sklearn.decomposition.KernelPCA(kernel="polynomial", degree=2)'),
+            (kpca_poly3, 'KPCA [Poly-3]', 'kpca-poly-3', [3], 'sklearn.decomposition.KernelPCA(kernel="polynomial", degree=3)'),
+
+            (kda_linear, 'KDA [Linear]', 'kda-linear', [3], 'KDA(kernel="linear")'),
+            (kda_poly2, 'KDA [Poly-2]', 'kda-poly-2', [3], 'KDA(kernel="polynomial", degree=2)'),
+            (kda_poly3, 'KDA [Poly-3]', 'kda-poly-3', [3], 'KDA(kernel="polynomial", degree=3)'),
+            ]
+
+
+def kernel_knn_algs():
+    euclidean = Euclidean()
+
+    kpca_linear = KernelPCA(kernel="linear")
+    kpca_poly2 = KernelPCA(kernel="polynomial", degree=2)
+    kpca_poly3 = KernelPCA(kernel="polynomial", degree=3)
+    kpca_rbf = KernelPCA(kernel="rbf")
+    kpca_lapl = KernelPCA(kernel="laplacian")
+
+    kda_linear = KDA(kernel="linear")
+    kda_poly2 = KDA(kernel="polynomial", degree=2)
+    kda_poly3 = KDA(kernel="polynomial", degree=3)
+    kda_rbf = KDA(kernel="rbf")
+    kda_lapl = KDA(kernel="laplacian")
+
+    kanmm_linear = KANMM(kernel="linear")
+    kanmm_poly2 = KANMM(kernel="polynomial", degree=2)
+    kanmm_poly3 = KANMM(kernel="polynomial", degree=3)
+    kanmm_rbf = KANMM(kernel="rbf")
+    kanmm_lapl = KANMM(kernel="laplacian")
+
+    kdmlmj_linear = KDMLMJ(kernel="linear")
+    kdmlmj_poly2 = KDMLMJ(kernel="polynomial", degree=2)
+    kdmlmj_poly3 = KDMLMJ(kernel="polynomial", degree=3)
+    kdmlmj_rbf = KDMLMJ(kernel="rbf")
+    kdmlmj_lapl = KDMLMJ(kernel="laplacian")
+
+    klmnn_linear = KLMNN(k=3, kernel="linear")
+    klmnn_poly2 = KLMNN(k=3, kernel="polynomial", degree=2)
+    klmnn_poly3 = KLMNN(k=3, kernel="polynomimal", degree=3)
+    klmnn_rbf = KLMNN(k=3, kernel="rbf")
+    klmnn_lapl = KLMNN(k=3, kernel="laplacian")
+
+    return [(euclidean, 'Euclidean', 'euclidean', [3], 'Euclidean()'),
+
+            (kpca_linear, 'KPCA [Linear]', 'kpca-linear', [3], 'sklearn.decomposition.KernelPCA(kernel="linear")'),
+            (kpca_poly2, 'KPCA [Poly-2]', 'kpca-poly-2', [3], 'sklearn.decomposition.KernelPCA(kernel="polynomial", degree=2)'),
+            (kpca_poly3, 'KPCA [Poly-3]', 'kpca-poly-3', [3], 'sklearn.decomposition.KernelPCA(kernel="polynomial", degree=3)'),
+            (kpca_rbf, 'KPCA [RBF]', 'kpca-rbf', [3], 'sklearn.decomposition.KernelPCA(kernel="rbf")'),
+            (kpca_lapl, 'KPCA [Laplacian]', 'kpca-laplacian', [3], 'sklearn.decomposition.KernelPCA(kernel="laplacian")'),
+
+            (kda_linear, 'KDA [Linear]', 'kda-linear', [3], 'KDA(kernel="linear")'),
+            (kda_poly2, 'KDA [Poly-2]', 'kda-poly-2', [3], 'KDA(kernel="polynomial", degree=2)'),
+            (kda_poly3, 'KDA [Poly-3]', 'kda-poly-3', [3], 'KDA(kernel="polynomial", degree=3)'),
+            (kda_rbf, 'KDA [RBF]', 'kda-rbf', [3], 'KDA(kernel="rbf")'),
+            (kda_lapl, 'KDA [Laplacian]', 'kda-laplacian', [3], 'KDA(kernel="laplacian")'),
+
+            (kanmm_linear, 'KANMM [Linear]', 'kanmm-linear', [3], 'KANMM(kernel="linear")'),
+            (kanmm_poly2, 'KANMM [Poly-2]', 'kanmm-poly-2', [3], 'KANMM(kernel="polynomial"), degree=2'),
+            (kanmm_poly3, 'KANMM [Poly-3]', 'kanmm-poly-3', [3], 'KANMM(kernel="polynomial"), degree=3'),
+            (kanmm_rbf, 'KANMM [RBF]', 'kanmm-rbf', [3], 'KANMM(kernel="rbf")'),
+            (kanmm_lapl, 'KANMM [Laplacian]', 'kanmm-laplacian', [3], 'KANMM(kernel="laplacian")'),
+
+            (kdmlmj_linear, 'KDMLMJ [Linear]', 'kdmlmj-linear', [3], 'KDMLMJ(kernel="linear")'),
+            (kdmlmj_poly2, 'KDMLMJ [Poly-2]', 'kdmlmj-poly-2', [3], 'KDMLMJ(kernel="poly-2")'),
+            (kdmlmj_poly3, 'KDMLMJ [Poly-3]', 'kdmlmj-poly-3', [3], 'KDMLMJ(kernel="poly-3")'),
+            (kdmlmj_rbf, 'KDMLMJ [RBF]', 'kdmlmj-rbf', [3], 'KDMLMJ(kernel="rbf")'),
+            (kdmlmj_lapl, 'KDMLMJ [Laplacian]', 'kdmlmj-laplacian', [3], 'KDMLMJ(kernel="laplacian")'),
+
+            (klmnn_linear, 'KLMNN [Linear]', 'klmnn-linear', [3], 'KLMNN(k=3, kernel="linear")'),
+            (klmnn_poly2, 'KLMNN [Poly-2]', 'klmnn-poly-2', [3], 'KLMNN(k=3, kernel="polynomial", degree=2)'),
+            (klmnn_poly3, 'KLMNN [Poly-3]', 'klmnn-poly-3', [3], 'KLMNN(k=3, kernel="polynomial", degree=3)'),
+            (klmnn_rbf, 'KLMNN [RBF]', 'klmnn-rbf', [3], 'KLMNN(k=3, kernel="rbf")'),
+            (klmnn_lapl, 'KLMNN [Laplacian]', 'klmnn-laplacian', [3], 'KLMNN(k=3, kernel="laplacian")'),
+            ]
+
+
+def ncm_algs():
+    euclidean = Euclidean()
+
+    ncmml = NCMML()
+    ncmc2 = NCMC(centroids_num=2)
+    ncmc3 = NCMC(centroids_num=3)
+
+    return [(euclidean, ['Euclidean + NCM', 'Euclidean + NCMC (2 ctrd)', 'Euclidean + NCMC (3 ctrd)'], ['euclidean-ncm', 'euclidean-ncmc-2', 'euclidean-ncmc-3'], [1, 2, 3], 'Euclidean()'),
+            (ncmml, ['NCMML'], ['ncmml'], [1], 'NCMML()'),
+            (ncmc2, ['NCMC (2 ctrd)'], ['ncmc-2'], [2], 'NCMC(centroids_num=2)'),
+            (ncmc3, ['NCMC (3 ctrd)'], ['ncmc-3'], [3], 'NCMC(centroids_num=3)'),
+            ]
+
+
+def test_dim_algs(dim):
+    pca = PCA(num_dims=dim)
+    lda = LDA(num_dims=dim)
+    anmm = ANMM(num_dims=dim)
+
+    return [(pca, 'PCA', 'pca', [3, 5, 7], 'PCA(num_dims=dim)'),
+            (lda, 'LDA', 'lda', [3, 5, 7], 'LDA(num_dims=dim)'),
+            (anmm, 'ANMM', 'anmm', [3], 'ANMM(num_dims=dim, n_friends=3, n_enemies=3)'),
+            ]
+
+
+def dim_algs(dim):
+    pca = PCA(num_dims=dim)
+    lda = LDA(num_dims=dim)
+
+    anmm_3 = ANMM(num_dims=dim, n_friends=3, n_enemies=3)
+    anmm_5 = ANMM(num_dims=dim, n_friends=5, n_enemies=5)
+    anmm_7 = ANMM(num_dims=dim, n_friends=7, n_enemies=7)
+
+    lmnn_3 = LMNN(num_dims=dim, k=3, solver='SGD', eta0=0.01)
+    lmnn_5 = LMNN(num_dims=dim, k=5, solver='SGD', eta0=0.01)
+    lmnn_7 = LMNN(num_dims=dim, k=7, solver='SGD', eta0=0.01)
+
+    nca = NCA(num_dims=dim)
+
+    dmlmj_3 = DMLMJ(num_dims=dim, n_neighbors=3)
+    dmlmj_5 = DMLMJ(num_dims=dim, n_neighbors=5)
+    dmlmj_7 = DMLMJ(num_dims=dim, n_neighbors=7)
+
+    return [(pca, 'PCA', 'pca', [3, 5, 7], 'PCA(num_dims=dim)'),
+            (lda, 'LDA', 'lda', [3, 5, 7], 'LDA(num_dims=dim)'),
+            (anmm_3, 'ANMM', 'anmm', [3], 'ANMM(num_dims=dim, n_friends=3, n_enemies=3)'),
+            (anmm_5, 'ANMM', 'anmm', [5], 'ANMM(num_dims=dim, n_friends=5, n_enemies=5)'),
+            (anmm_7, 'ANMM', 'anmm', [7], 'ANMM(num_dims=dim, n_friends=7, n_enemies=7)'),
+            (lmnn_3, 'LMNN', 'lmnn', [3], "LMNN(num_dims=dim, k=3, solver='SGD', eta0=0.01)"),
+            (lmnn_5, 'LMNN', 'lmnn', [5], "LMNN(num_dims=dim, k=5, solver='SGD', eta0=0.01)"),
+            (lmnn_7, 'LMNN', 'lmnn', [7], "LMNN(num_dims=dim, k=7, solver='SGD', eta0=0.01)"),
+            (nca, 'NCA', 'nca', [3, 5, 7], 'NCA(num_dims=dim)'),
+            (dmlmj_3, 'DMLMJ', 'dmlmj', [3], 'DMLMJ(num_dims=dim, n_neighbors=3)'),
+            (dmlmj_5, 'DMLMJ', 'dmlmj', [5], 'DMLMJ(num_dims=dim, n_neighbors=5)'),
+            (dmlmj_7, 'DMLMJ', 'dmlmj', [7], 'DMLMJ(num_dims=dim, n_neighbors=7)'),
+            ]
+
+
+def test_basic_knn(alg_list, datasets, textkey="cv-basic", testname="BASIC", seed=28):
+    """
+    Evaluates the algorithms specified in the datasets provided.
+
+    Parameters
+    ----------
+
+    alg_list : list
+        The list of algorithms. Each item must be a quadruple (alg, name, key, ks, cons), where 'alg' is the algorithm, 'name'
+        is the string name, 'key' is a key-name for the alg, 'ks' is the list of neighbors to consider in k-NN, and cons
+        is the initialization code of the algorithm.
+
+    datasets : list
+        The list of datasets to use. Each item must be a pair (str, frac), where 'str' is the name of the dataset
+        and 'frac' is the fraction of the dataset to take (for big datasets).
+
+    """
+    print("* " + testname + " TEST STARTED")
+    mms = MinMaxScaler()
+    rownames = ["FOLD " + str(i + 1) for i in range(10)]
+
+    results = {}
+
+    for dset, f in datasets:
+        print("** DATASET ", dset)
+
+        folds, [n, d, c] = ds.reduced_dobscv10(dset, f)
+
+        print("** SIZE ", n, " x ", d, " [", c, " classes]")
+
+        results[dset] = {}
+
+        norm_folds = []
+
+        for i, (xtr, ytr, xtst, ytst) in enumerate(folds):
+            print("*** NORMALIZING FOLD ", i + 1)
+            # Normalizing
+            xtr = mms.fit_transform(xtr)
+            xtst = mms.transform(xtst)
+            norm_folds.append((xtr, ytr, xtst, ytst))
+
+        for j, (dml, dml_name, dml_key, ks, cons) in enumerate(alg_list):
+            print("*** EVALUATING DML ", dml_name)
+
+            results[dset][dml_key] = defaultdict(lambda: np.zeros([12, 3]))
+
+            for i, (xtr, ytr, xtst, ytst) in enumerate(norm_folds):
+                print("**** FOLD ", i + 1)
+                np.random.seed(seed)
+
+                try:
+                    print("***** TRAINING")
+                    start = time.time()     # Start timer
+                    dml.fit(xtr, ytr)       # Fitting distance
+                    end = time.time()       # Stop timer
+                    elapsed = end - start   # Timer measurement
+
+                    for k in ks:
+                        print("****** TEST K = ", k)
+                        knn = kNN(k, dml)
+                        knn.fit(xtr, ytr)
+
+                        results[dset][dml_key][k][i, 0] = knn.score()            # Train score
+                        results[dset][dml_key][k][i, 1] = knn.score(xtst, ytst)  # Test score
+                        results[dset][dml_key][k][i, 2] = elapsed                # Time score
+                except:
+                    print("--- ERROR IN DML ", dml_name)
+                    for k in ks:
+                        results[dset][dml_key][k][i, 0] = np.nan          # Train score
+                        results[dset][dml_key][k][i, 1] = np.nan          # Test score
+                        results[dset][dml_key][k][i, 2] = np.nan          # Time score
+
+                    traceback.print_exc()
+
+            for k in ks:
+                results[dset][dml_key][k][10, :] = np.mean(results[dset][dml_key][k][:10, :], axis=0)
+                results[dset][dml_key][k][11, :] = np.std(results[dset][dml_key][k][:10, :], axis=0)
+
+                # Saving results
+                r = pd.DataFrame(results[dset][dml_key][k], columns=['TRAIN', 'TEST', 'TIME'], index=rownames + ["MEAN", "STD"])
+
+                r.to_csv("../results/" + textkey + "-" + dml_key + "-" + str(k) + "nn-" + dset + ".csv")
+                r.to_html("../results/" + textkey + "-" + dml_key + "-" + str(k) + "nn-" + dset + ".html", classes=[table_css(), "kfoldtable meanstd"])
+
+                print("RESULTS: ", dset, ", dml = ", dml_name, ", k = ", k)
+                print(r)
+
+
+def test_ker_knn(alg_list, datasets, seed=28):
+    test_basic_knn(alg_list, datasets, "cv-ker", "KERNEL", seed)
+
+
+def test_ncm(alg_list, datasets, seed=28):
+    """
+    Evaluates the algorithms specified in the datasets provided.
+
+    Parameters
+    ----------
+
+    alg_list : list
+        The list of algorithms. Each item must be a quadruple (alg, name, key, ks, cons), where 'alg' is the algorithm, 'name'
+        is the string name, 'key' is a key-name for the alg, 'ks' is the list of neighbors to consider in k-NN, and cons
+        is the initialization code of the algorithm.
+
+    datasets : list
+        The list of datasets to use. Each item must be a pair (str, frac), where 'str' is the name of the dataset
+        and 'frac' is the fraction of the dataset to take (for big datasets).
+
+    """
+    print("* NEAREST CENTROIDS TEST STARTED")
+    mms = MinMaxScaler()
+    rownames = ["FOLD " + str(i + 1) for i in range(10)]
+
+    results = {}
+
+    for dset, f in datasets:
+        print("** DATASET ", dset)
+
+        folds, [n, d, c] = ds.reduced_dobscv10(dset, f)
+
+        print("** SIZE ", n, " x ", d, " [", c, " classes]")
+
+        results[dset] = {}
+
+        norm_folds = []
+
+        for i, (xtr, ytr, xtst, ytst) in enumerate(folds):
+            print("*** NORMALIZING FOLD ", i + 1)
+            # Normalizing
+            xtr = mms.fit_transform(xtr)
+            xtst = mms.transform(xtst)
+            norm_folds.append((xtr, ytr, xtst, ytst))
+
+        for j, (dml, dml_name, dml_key, ks, cons) in enumerate(alg_list):
+            print("*** EVALUATING DML ", dml_name)
+
+            results[dset] = defaultdict(lambda: np.zeros([12, 3]))
+
+            for i, (xtr, ytr, xtst, ytst) in enumerate(norm_folds):
+                print("**** FOLD ", i + 1)
+                np.random.seed(seed)
+
+                try:
+                    print("***** TRAINING")
+                    start = time.time()     # Start timer
+                    dml.fit(xtr, ytr)       # Fitting distance
+                    end = time.time()       # Stop timer
+                    elapsed = end - start   # Timer measurement
+
+                    xtr2 = dml.transform()
+                    xtst2 = dml.transform(xtst)
+
+                    for namek, keyk, k in zip(dml_name, dml_key, ks):
+                        print("****** TEST NCM [", k, " CTRD]")
+
+                        if k == 1:
+                            ncm = NearestCentroid()
+                        else:
+                            ncm = NCMC_Classifier(k)
+
+                        ncm.fit(xtr2, ytr)
+
+                        results[dset][keyk][i, 0] = ncm.score(xtr2, ytr)            # Train score
+                        results[dset][keyk][i, 1] = ncm.score(xtst2, ytst)  # Test score
+                        results[dset][keyk][i, 2] = elapsed                # Time score
+                except:
+                    print("--- ERROR IN DML ", dml_name)
+                    for keyk in dml_key:
+                        results[dset][keyk][i, 0] = np.nan          # Train score
+                        results[dset][keyk][i, 1] = np.nan          # Test score
+                        results[dset][keyk][i, 2] = np.nan          # Time score
+
+                    traceback.print_exc()
+
+            for keyk, namek in zip(dml_key, dml_name):
+                results[dset][keyk][10, :] = np.mean(results[dset][keyk][:10, :], axis=0)
+                results[dset][keyk][11, :] = np.std(results[dset][keyk][:10, :], axis=0)
+
+                # Saving results
+                r = pd.DataFrame(results[dset][keyk], columns=['TRAIN', 'TEST', 'TIME'], index=rownames + ["MEAN", "STD"])
+
+                r.to_csv("../results/cv-ncm-" + keyk + "-" + dset + ".csv")
+                r.to_html("../results/cv-ncm-" + keyk + "-" + dset + ".html", classes=[table_css(), "kfoldtable meanstd"])
+
+                print("RESULTS: ", dset, ", dml = ", namek)
+                print(r)
+
+
+def test_dim_knn(datasets, dimensions, dim_alg_function=dim_algs, add_nclass1=True, add_maxdim=True, seed=28):
+    for dset, f in datasets:
+        folds, [n, d, c] = ds.reduced_dobscv10(dset, f)
+        dset_dims = dimensions
+        if add_nclass1:
+            dset_dims.append(c - 1)
+        if add_maxdim:
+            dset_dims.append(d)
+        dset_dims = np.unique(dset_dims)
+
+        for dim in dset_dims:
+            test_basic_knn(dim_alg_function(dim), [(dset, f)], "cv-dim-" + str(dim), "DIM " + str(dim), seed)
