@@ -119,6 +119,64 @@ def dataset_names():
             'wisconsin']
 
 
+def small_datasets_names():
+    return ['appendicitis',
+            'balance',
+            'bupa',
+            'cleveland',
+            'glass',
+            'hepatitis',
+            'ionosphere',
+            'iris',
+            'monk-2',
+            'newthyroid',
+            'sonar',
+            'wine',
+            ]
+
+
+def medium_datasets_names():
+    return ['movement_libras',
+            'pima',
+            'vehicle',
+            'vowel',
+            'wdbc',
+            'wisconsin',
+            ]
+
+
+def large_datasets_names1():
+    return ['segment',
+            'satimage',
+            'winequality_red',
+            'digits',
+            ]
+
+
+def large_datasets_names2():
+    return ['spambase',
+            'optdigits',
+            'twonorm',
+            'titanic',
+            ]
+
+
+def large_datasets_names3():
+    return ['banana',
+            'texture',
+            'ring',
+            'letter',
+            ]
+
+
+def large_datasets_names4():
+    return ['phoneme',
+            'page-blocks',
+            'thyroid',
+            'magic',
+            ]
+
+
 def medium_datasets_ker():
     return [('movement_libras', 1),
             ('pima', 1),
@@ -147,6 +205,34 @@ def large_datasets_ker3():
 def large_datasets_ker4():
     return [('phoneme', 5),
             ]
+
+
+def medium_datasets_ker_names():
+    return ['movement_libras',
+            'pima',
+            'wdbc',
+            ]
+
+
+def large_datasets_ker_names1():
+    return ['segment',
+            'satimage',
+            ]
+
+
+def large_datasets_ker_names2():
+    return ['spambase',
+            'optdigits',
+            'twonorm'
+            ]
+
+
+def large_datasets_ker_names3():
+    return ['banana']
+
+
+def large_datasets_ker_names4():
+    return ['phoneme']
 
 
 def ker_datasets_names():
@@ -363,11 +449,15 @@ def ncm_algs():
 def test_dim_algs(dim):
     pca = PCA(num_dims=dim)
     lda = LDA(num_dims=dim)
-    anmm = ANMM(num_dims=dim)
+    anmm_3 = ANMM(num_dims=dim, n_friends=3, n_enemies=3)
+    anmm_5 = ANMM(num_dims=dim, n_friends=5, n_enemies=5)
+    anmm_7 = ANMM(num_dims=dim, n_friends=7, n_enemies=7)
 
     return [(pca, 'PCA', 'pca', [3, 5, 7], 'PCA(num_dims=dim)'),
             (lda, 'LDA', 'lda', [3, 5, 7], 'LDA(num_dims=dim)'),
-            (anmm, 'ANMM', 'anmm', [3], 'ANMM(num_dims=dim, n_friends=3, n_enemies=3)'),
+            (anmm_3, 'ANMM', 'anmm', [3], 'ANMM(num_dims=dim, n_friends=3, n_enemies=3)'),
+            (anmm_5, 'ANMM', 'anmm', [5], 'ANMM(num_dims=dim, n_friends=5, n_enemies=5)'),
+            (anmm_7, 'ANMM', 'anmm', [7], 'ANMM(num_dims=dim, n_friends=7, n_enemies=7)'),
             ]
 
 
@@ -604,3 +694,276 @@ def test_dim_knn(datasets, dimensions, dim_alg_function=dim_algs, add_nclass1=Tr
 
         for dim in dset_dims:
             test_basic_knn(dim_alg_function(dim), [(dset, f)], "cv-dim-" + str(dim), "DIM " + str(dim), seed)
+
+
+def recopilate_test_algs():
+    return [('Euclidean', 'euclidean'),
+            ('LDA', 'lda'),
+            ('DMLMJ', 'dmlmj'),
+            ]
+
+
+def recopilate_basic_algs():
+    return [('Euclidean', 'euclidean'),
+            ('LDA', 'lda'),
+            ('ITML', 'itml'),
+            ('DMLMJ', 'dmlmj'),
+            ('NCA', 'nca'),
+            ('LMNN', 'lmnn'),
+            ('LSI', 'lsi'),
+            ('DML-eig', 'dml-eig'),
+            ('MCML', 'mcml'),
+            ('LDML', 'ldml'),
+            ]
+
+
+def recopilate_ncm_algs():
+    return [('Euclidean + NCM', 'euclidean-ncm'),
+            ('NCMML', 'ncmml'),
+            ('Euclidean + NCMC (2 ctrd)', 'euclidean-ncmc-2'),
+            ('NCMC (2 ctrd)', 'ncmc-2'),
+            ('Euclidean + NCMC (3 ctrd)', 'euclidean-ncmc-3'),
+            ('NCMC (3 ctrd)', 'ncmc-3'),
+            ]
+
+
+def recopilate_test_kernel_algs():
+    return [('Euclidean', 'euclidean'),
+
+            ('KPCA [Linear]', 'kpca-linear'),
+            ('KPCA [Poly-2]', 'kpca-poly-2'),
+            ('KPCA [Poly-3]', 'kpca-poly-3'),
+
+            ('KDA [Linear]', 'kda-linear'),
+            ('KDA [Poly-2]', 'kda-poly-2'),
+            ('KDA [Poly-3]', 'kda-poly-3'),
+            ]
+
+
+def recopilate_kernel_algs():
+    return [('Euclidean', 'euclidean'),
+
+            ('KPCA [Linear]', 'kpca-linear'),
+            ('KPCA [Poly-2]', 'kpca-poly-2'),
+            ('KPCA [Poly-3]', 'kpca-poly-3'),
+            ('KPCA [RBF]', 'kpca-rbf'),
+            ('KPCA [Laplacian]', 'kpca-laplacian'),
+
+            ('KDA [Linear]', 'kda-linear'),
+            ('KDA [Poly-2]', 'kda-poly-2'),
+            ('KDA [Poly-3]', 'kda-poly-3'),
+            ('KDA [RBF]', 'kda-rbf'),
+            ('KDA [Laplacian]', 'kda-laplacian'),
+
+            ('KANMM [Linear]', 'kanmm-linear'),
+            ('KANMM [Poly-2]', 'kanmm-poly-2'),
+            ('KANMM [Poly-3]', 'kanmm-poly-3'),
+            ('KANMM [RBF]', 'kanmm-rbf'),
+            ('KANMM [Laplacian]', 'kanmm-laplacian'),
+
+            ('KDMLMJ [Linear]', 'kdmlmj-linear'),
+            ('KDMLMJ [Poly-2]', 'kdmlmj-poly-2'),
+            ('KDMLMJ [Poly-3]', 'kdmlmj-poly-3'),
+            ('KDMLMJ [RBF]', 'kdmlmj-rbf'),
+            ('KDMLMJ [Laplacian]', 'kdmlmj-laplacian'),
+
+            ('KLMNN [Linear]', 'klmnn-linear'),
+            ('KLMNN [Poly-2]', 'klmnn-poly-2'),
+            ('KLMNN [Poly-3]', 'klmnn-poly-3'),
+            ('KLMNN [RBF]', 'klmnn-rbf'),
+            ('KLMNN [Laplacian]', 'klmnn-laplacian'),
+            ]
+
+
+def recopilate_test_dim_algs():
+    return [('PCA', 'pca'),
+            ('LDA', 'lda'),
+            ('ANMM', 'anmm')
+            ]
+
+
+def recopilate_dim_algs():
+    return [('PCA', 'pca'),
+            ('LDA', 'lda'),
+            ('ANMM', 'anmm'),
+            ('DMLMJ', 'dmlmj'),
+            ('NCA', 'nca'),
+            ('LMNN', 'lmnn')
+            ]
+
+
+def add_avg(df):
+    '''
+    Adds avg ranking and score to a dataframe.
+    '''
+    avgmean = pd.Series(df.mean(), name="AVG SCORE")
+    avgrank = pd.Series(df.rank(axis=1, ascending=False).fillna(df.columns.size).mean(), name="AVG RANKING")
+    return df.append([avgmean, avgrank])
+
+
+def recopilate_basic(alg_list, dataset_names, textkey="cv-basic", outkey="basic", ks=[3, 5, 7]):
+    """
+        Recopilate results
+
+        Parameters
+        ----------
+
+        alg_list : a list with the algorithms. Each item must be a pair (name, key).
+
+        dataset_names : the names of the datasets
+    """
+    print("* RECOPILATING: ", textkey)
+
+    alg_names = list(map(lambda x: x[0], alg_list))
+    alg_keys = list(map(lambda x: x[1], alg_list))
+
+    final_results = {}
+    for k in ks:
+        print("** K = ", k)
+        final_results[k] = {}
+        final_results[k]['train'] = np.empty([len(dataset_names), len(alg_list)])
+        final_results[k]['test'] = np.empty([len(dataset_names), len(alg_list)])
+        final_results[k]['time'] = np.empty([len(dataset_names), len(alg_list)])
+
+        final_results[k]['train'] = pd.DataFrame(final_results[k]['train'], index=dataset_names, columns=alg_names)
+        final_results[k]['test'] = pd.DataFrame(final_results[k]['test'], index=dataset_names, columns=alg_names)
+        final_results[k]['time'] = pd.DataFrame(final_results[k]['time'], index=dataset_names, columns=alg_names)
+
+        for dts in dataset_names:
+            for algname, algkey in alg_list:
+                filename = "../results/" + textkey + "-" + algkey + "-" + str(k) + "nn-" + dts + ".csv"
+                print("**** READING ", filename)
+                partial_results = pd.read_csv(filename, index_col=0)
+                final_results[k]['train'][algname][dts] = partial_results['TRAIN']['MEAN']
+                final_results[k]['test'][algname][dts] = partial_results['TEST']['MEAN']
+                final_results[k]['time'][algname][dts] = partial_results['TIME']['MEAN']
+
+        final_results[k]['train'] = add_avg(final_results[k]['train'])
+        final_results[k]['test'] = add_avg(final_results[k]['test'])
+        final_results[k]['time'] = add_avg(final_results[k]['time'])
+
+        print("*** SAVING")
+
+        final_results[k]['train'].to_csv('../results/' + outkey + '-' + str(k) + 'nn-train.csv')
+        final_results[k]['test'].to_csv('../results/' + outkey + '-' + str(k) + 'nn-test.csv')
+        final_results[k]['time'].to_csv('../results/' + outkey + '-' + str(k) + 'nn-time.csv')
+        final_results[k]['train'].to_latex('../results/' + outkey + '-' + str(k) + 'nn-train.tex')
+        final_results[k]['test'].to_latex('../results/' + outkey + '-' + str(k) + 'nn-test.tex')
+        final_results[k]['time'].to_latex('../results/' + outkey + '-' + str(k) + 'nn-time.tex')
+        final_results[k]['train'].to_html('../results/' + outkey + '-' + str(k) + 'nn-train.html', classes=[table_css(), "maxhighlightable withavg"])
+        final_results[k]['test'].to_html('../results/' + outkey + '-' + str(k) + 'nn-test.html', classes=[table_css(), "maxhighlightable withavg"])
+        final_results[k]['time'].to_html('../results/' + outkey + '-' + str(k) + 'nn-time.html', classes=[table_css(), "maxhighlightable withavg"])
+
+
+def recopilate_kernel(alg_list, dataset_names, ks=[3]):
+    recopilate_basic(alg_list, dataset_names, "cv-ker", "ker", ks)
+
+
+def recopilate_ncm(alg_list, dataset_names):
+    print("* RECOPILATING: ncm")
+
+    alg_names = list(map(lambda x: x[0], alg_list))
+    alg_keys = list(map(lambda x: x[1], alg_list))
+
+    final_results = {}
+
+    final_results['train'] = np.empty([len(dataset_names), len(alg_list)])
+    final_results['test'] = np.empty([len(dataset_names), len(alg_list)])
+    final_results['time'] = np.empty([len(dataset_names), len(alg_list)])
+
+    final_results['train'] = pd.DataFrame(final_results['train'], index=dataset_names, columns=alg_names)
+    final_results['test'] = pd.DataFrame(final_results['test'], index=dataset_names, columns=alg_names)
+    final_results['time'] = pd.DataFrame(final_results['time'], index=dataset_names, columns=alg_names)
+
+    for dts in dataset_names:
+        for algname, algkey in alg_list:
+            filename = "../results/cv-ncm-" + algkey + "-" + dts + ".csv"
+            print("*** READING ", filename)
+            partial_results = pd.read_csv(filename, index_col=0)
+
+            final_results['train'][algname][dts] = partial_results['TRAIN']['MEAN']
+            final_results['test'][algname][dts] = partial_results['TEST']['MEAN']
+            final_results['time'][algname][dts] = partial_results['TIME']['MEAN']
+
+    final_results['train'] = add_avg(final_results['train'])
+    final_results['test'] = add_avg(final_results['test'])
+    final_results['time'] = add_avg(final_results['time'])
+
+    print("** SAVING")
+
+    final_results['train'].to_csv("../results/ncm-train.csv")
+    final_results['test'].to_csv("../results/ncm-test.csv")
+    final_results['time'].to_csv("../results/ncm-time.csv")
+    final_results['train'].to_latex("../results/ncm-train.tex")
+    final_results['test'].to_latex("../results/ncm-test.tex")
+    final_results['time'].to_latex("../results/ncm-time.tex")
+    final_results['train'].to_html("../results/ncm-train.html", classes=[table_css(), "maxhighlightable withavg"])
+    final_results['test'].to_html("../results/ncm-test.html", classes=[table_css(), "maxhighlightable withavg"])
+    final_results['time'].to_html("../results/ncm-time.html", classes=[table_css(), "maxhighlightable withavg"])
+
+
+def recopilate_dim(alg_list, dataset_names, dimensions, ks=[3, 5, 7], add_nclass1=True, add_maxdim=True):
+    print("* RECOPILATING: dim")
+    dimension_names = dimensions.copy()
+    if add_nclass1:
+        dimension_names.append("N. Classes - 1")
+    if add_maxdim:
+        dimension_names.append("Max. Dimension")
+
+    alg_names = list(map(lambda x: x[0], alg_list))
+    alg_keys = list(map(lambda x: x[1], alg_list))
+
+    final_results = {}
+
+    for dst in dataset_names:
+        print("** DATASET ", dst)
+        final_results[dst] = {}
+        folds, [n, d, c] = ds.dobscv10(dst)
+
+        ds_dimensions = dimensions.copy()
+        if add_nclass1:
+            ds_dimensions.append(c - 1)
+        if add_maxdim:
+            ds_dimensions.append(d)
+
+        for k in ks:
+            print("*** K = ", k)
+
+            final_results[dst][k] = {}
+
+            final_results[dst][k]['train'] = np.empty([len(dimension_names), len(alg_list)])
+            final_results[dst][k]['test'] = np.empty([len(dimension_names), len(alg_list)])
+            final_results[dst][k]['time'] = np.empty([len(dimension_names), len(alg_list)])
+
+            final_results[dst][k]['train'] = pd.DataFrame(final_results[dst][k]['train'], index=dimension_names, columns=alg_names)
+            final_results[dst][k]['test'] = pd.DataFrame(final_results[dst][k]['test'], index=dimension_names, columns=alg_names)
+            final_results[dst][k]['time'] = pd.DataFrame(final_results[dst][k]['time'], index=dimension_names, columns=alg_names)
+
+            for algname, algkey in alg_list:
+                for dimname, dim in zip(dimension_names, ds_dimensions):
+                    filename = "../results/cv-dim-" + str(dim) + "-" + algkey + "-" + str(k) + "nn-" + dst + ".csv"
+                    print("***** READING ", filename)
+
+                    if algkey == "lda" and dim > c - 1:  # Ignore LDA at dimension higher than c-1
+                        print("****** IGNORED LDA AT DIM ", dim)
+                        final_results[dst][k]['train'][algname][dimname] = np.nan
+                        final_results[dst][k]['test'][algname][dimname] = np.nan
+                        final_results[dst][k]['time'][algname][dimname] = np.nan
+
+                    else:
+                        partial_results = pd.read_csv(filename, index_col=0)
+
+                        final_results[dst][k]['train'][algname][dimname] = partial_results['TRAIN']['MEAN']
+                        final_results[dst][k]['test'][algname][dimname] = partial_results['TEST']['MEAN']
+                        final_results[dst][k]['time'][algname][dimname] = partial_results['TIME']['MEAN']
+
+            print("**** SAVING")
+            final_results[dst][k]['train'].to_csv("../results/dim-" + str(k) + "nn-" + dst + "-train.csv")
+            final_results[dst][k]['test'].to_csv("../results/dim-" + str(k) + "nn-" + dst + "-test.csv")
+            final_results[dst][k]['time'].to_csv("../results/dim-" + str(k) + "nn-" + dst + "-time.csv")
+            final_results[dst][k]['train'].to_latex("../results/dim-" + str(k) + "nn-" + dst + "-train.tex")
+            final_results[dst][k]['test'].to_latex("../results/dim-" + str(k) + "nn-" + dst + "-test.tex")
+            final_results[dst][k]['time'].to_latex("../results/dim-" + str(k) + "nn-" + dst + "-time.tex")
+            final_results[dst][k]['train'].to_html("../results/dim-" + str(k) + "nn-" + dst + "-train.html", classes=[table_css(), "maxhighlightable dimchartable"])
+            final_results[dst][k]['test'].to_html("../results/dim-" + str(k) + "nn-" + dst + "-test.html", classes=[table_css(), "maxhighlightable dimchartable"])
+            final_results[dst][k]['time'].to_html("../results/dim-" + str(k) + "nn-" + dst + "-time.html", classes=[table_css(), "maxhighlightable dimchartable"])
