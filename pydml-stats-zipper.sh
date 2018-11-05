@@ -5,4 +5,4 @@
 
 zip -r downloads/results.zip results
 zip -r downloads/scripts.zip scripts
-zip -r downloads/pyDML-Stats.zip .
+# zip -r downloads/pyDML-Stats.zip .# No longer: download directly from GitHub's link.

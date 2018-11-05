@@ -322,7 +322,7 @@ def basic_knn_algs():
     dml_eig = DML_eig()
     ldml = LDML()
 
-    return [(euclidean, 'Euclidean', 'euclidean' [3, 5, 7], 'Euclidean()'),
+    return [(euclidean, 'Euclidean', 'euclidean', [3, 5, 7], 'Euclidean()'),
             (lda, 'LDA', 'lda', [3, 5, 7], 'LDA()'),
             (nca, 'NCA', 'nca', [3, 5, 7], 'NCA()'),
             (lmnn_3, 'LMNN (SDP)', 'lmnn-sdp', [3], 'LMNN(k=3)'),

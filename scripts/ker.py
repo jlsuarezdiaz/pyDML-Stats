@@ -14,23 +14,23 @@ if len(sys.argv) > 1:
         datasets = tf.small_datasets()
 
     elif mod == "medium":
-        alg_list = tf.ker_knn_algs()
+        alg_list = tf.kernel_knn_algs()
         datasets = tf.medium_datasets_ker()
 
     elif mod == "large1":
-        alg_list = tf.ker_knn_algs()
+        alg_list = tf.kernel_knn_algs()
         datasets = tf.large_datasets_ker1()
 
     elif mod == "large2":
-        alg_list = tf.ker_knn_algs()
+        alg_list = tf.kernel_knn_algs()
         datasets = tf.large_datasets_ker2()
 
     elif mod == "large3":
-        alg_list = tf.ker_knn_algs()
+        alg_list = tf.kernel_knn_algs()
         datasets = tf.large_datasets_ker3()
 
     elif mod == "large4":
-        alg_list = tf.ker_knn_algs()
+        alg_list = tf.kernel_knn_algs()
         datasets = tf.large_datasets_ker4()
 
     else:

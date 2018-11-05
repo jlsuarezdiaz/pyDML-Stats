@@ -170,5 +170,7 @@ def reduced_dobscv10(setname, part=10):
         Xtst, ytst = Xt[test], yt[test]
 
         partitions.append((Xtra, ytra, Xtst, ytst))
+        c = len(np.unique(ytra))
+        shape = Xt.shape + (c,)
 
-    return partitions, Xt.shape
+    return partitions, shape
