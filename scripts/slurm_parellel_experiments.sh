@@ -67,6 +67,6 @@ MOD[18]="dim"
 MOD[19]="dim"
 MOD[20]="dim"
 
-python ${MOD[$SLURM_ARRAY_TASK_ID]}.py ${ARGS[$SLURM_ARRAY_TASK_ID]}
-python recopilate.py ${MOD[$SLURM_ARRAY_TASK_ID]} ${ARGS[$SLURM_ARRAY_TASK_ID]}
+python3.6 ${MOD[$SLURM_ARRAY_TASK_ID]}.py ${ARGS[$SLURM_ARRAY_TASK_ID]}
+python3.6 recopilate.py ${MOD[$SLURM_ARRAY_TASK_ID]} ${ARGS[$SLURM_ARRAY_TASK_ID]}
 

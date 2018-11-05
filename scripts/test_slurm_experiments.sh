@@ -14,7 +14,7 @@
 #SBATCH -e test-pyDML-Stats-%A-%a.err
 
 # Tasks
-#SBATCH --array=0-20
+#SBATCH --array=0-3
 
 ######################
 # Begin work section #
@@ -27,5 +27,5 @@ MOD[1]="ncm"
 MOD[2]="ker"
 MOD[3]="dim"
 
-python ${MOD[$SLURM_ARRAY_TASK_ID]}.py test
-python recopilate.py ${MOD[$SLURM_ARRAY_TASK_ID]} test
+python3.6 ${MOD[$SLURM_ARRAY_TASK_ID]}.py test
+python3.6 recopilate.py ${MOD[$SLURM_ARRAY_TASK_ID]} test
