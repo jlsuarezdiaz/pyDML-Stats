@@ -50,7 +50,7 @@ def medium_datasets():
 def large_datasets1():
     return [('segment', 5),
             ('satimage', 5),
-            ('winequality_red', 1),
+            ('winequality-red', 1),
             ('digits', 1)
             ]
 
@@ -148,7 +148,7 @@ def medium_datasets_names():
 def large_datasets_names1():
     return ['segment',
             'satimage',
-            'winequality_red',
+            'winequality-red',
             'digits',
             ]
 
