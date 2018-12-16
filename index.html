@@ -61,7 +61,7 @@
 
       		reload_page(page_state);
 
-      		menu_bts = ["#home","#datasets","#basic","#ncm","#ker","#dim"];
+      		menu_bts = ["#home","#datasets","#basic","#ncm","#ker","#dim", "#bayes"];
 
       		for(var i = 0; i < menu_bts.length; i++){
       			$(menu_bts[i]).click(function(){
@@ -230,6 +230,12 @@
           <a class="nav-link" id="dim" href="#" data-shortname="Dimensionality Reduction Experiments">
             <i class="fas fa-fw fa-search-minus"></i>
             <span>Dimensionality reduction experiments</span>
+          </a>
+        </li>
+        <li class="nav-item side-menu">
+          <a class="nav-link" id="bayes" href="#" data-shortname="Bayesian Experiments">
+            <i class="far fa-chart-bar"></i>
+            <span>Bayesian tests</span>
           </a>
         </li>
         <li class="nav-item dropdown side-menu">

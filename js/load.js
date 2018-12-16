@@ -119,6 +119,10 @@ function reload_page(page_state){
         page_state.getTextContainer().load("view/home.html");
         page_state.getPageContainer().empty();
     }
+    if(topic == "bayes"){
+        page_state.getTextContainer().load("view/bayes.html");
+        page_state.getPageContainer().empty();
+    }
     else{
         load_results(page_state);
     }

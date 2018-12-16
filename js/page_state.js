@@ -27,7 +27,7 @@ class PageState{
 
     completePageContent(){
         var topic = this.page_content[0];
-        if(topic == "home"){
+        if(topic == "home" || topic == "bayes"){
             this.buttons = [];
             this.opts = [];
             this.special = [false];
