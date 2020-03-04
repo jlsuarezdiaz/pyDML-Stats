@@ -66,6 +66,14 @@ class PageState{
             this.buttons = [{'3nn':'3-NN','5nn':'5-NN','7nn':'7-NN'},{'sonar':'Sonar','movement_libras':'Movement Libras','spambase':'Spambase'},{'train':'Train','test':'Test'},{'table':'Table','chart':'Line chart'}];
             this.opts = ['Classifier', 'Dataset', 'Subset','View'];
         }
+
+        else if(topic == "cmp"){
+            this.page_content[1] = "3nn";
+            this.page_content[2] = "test"
+            this.buttons = [{'3nn': '3-NN', '5nn': '5-NN', '7nn': '7-NN'}, {'test': 'Test'}];
+            this.opts = ['Classifier', 'Dataset']
+            this.special = [false, false];
+        }
     }
 
     setPageContainer(obj){
