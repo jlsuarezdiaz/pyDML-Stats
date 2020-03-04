@@ -36,7 +36,6 @@ function load_results(page_state){
         if(i < results_content.length-1 && !page_state.isSpecialItem(i+1)) result_str += "-";
     }
     result_str += ".html";
-    console.log(result_str)
 
     //loctext.empty();
     loctext.load("view/"+results_content[0]+".html");
